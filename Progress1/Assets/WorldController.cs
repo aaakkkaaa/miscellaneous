@@ -20,7 +20,9 @@ public class WorldController : MonoBehaviour
             return _sourceControls;
         }
     }
-    
+
+    private bool showGUI = false;       // показывать или скрывать интерфейс для сохранения/загрузки
+
 
     void Awake()
     {
@@ -36,6 +38,15 @@ public class WorldController : MonoBehaviour
             print(ctrl.NativePath);
             _sourceControls.Add(ctrl.NativePath, ctrl);
         }
+    }
+
+    private void Update()
+    {
+        if ( Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown("s"))
+        {
+            showGUI = !showGUI;
+        }
+
     }
 
     public void Load(string name)
@@ -92,18 +103,20 @@ public class WorldController : MonoBehaviour
     }
 
     // для отладки - интерфейс для загрузки и сохранения в xml
-
     string _fileName;
     void OnGUI()
     {
-        _fileName = GUI.TextField(new Rect(10, 10, 100, 20), _fileName);
-        if (GUI.Button(new Rect(10, 40, 100, 30), "Load"))
-        {
-            Load(_fileName);
-        }
-        if (GUI.Button(new Rect(10, 70, 100, 30), "Save"))
-        {
-            Save(_fileName);
+        if(showGUI)
+        { 
+            _fileName = GUI.TextField(new Rect(10, 10, 100, 20), _fileName);
+            if (GUI.Button(new Rect(10, 40, 100, 30), "Load"))
+            {
+                Load(_fileName);
+            }
+            if (GUI.Button(new Rect(10, 70, 100, 30), "Save"))
+            {
+                Save(_fileName);
+            }
         }
 
     }

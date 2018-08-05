@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1251"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <world xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" worldRoot="room">
   <controls>
     <control nativePath="room" currentPath="room" parentNativePath="">
@@ -14,10 +14,12 @@
       <pos x="0" y="0" z="0" />
       <rot x="0" y="0" z="0" />
       <scale x="0.58501" y="0.49043" z="0.54418" />
+      <state freeState="free" openState="open" param="-300" />
     </control>
     <control nativePath="room/box1" currentPath="room/box1" parentNativePath="room">
-      <pos x="3.92" y="0" z="-1.6" />
+      <pos x="3.5" y="0.05" z="-1.7" />
       <rot x="-1.06721707E-07" y="346.112335" z="11.9644108" />
+      <state freeState="free" openState="open" param="-300" />
     </control>
   </controls>
 </world>

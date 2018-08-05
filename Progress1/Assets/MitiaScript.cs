@@ -44,7 +44,10 @@ public class MitiaScript : MonoBehaviour, IInteractive
         {
             _openState = newOpenState;
             _param = (90 - (360-rot.x) ) / (90) * 100;
-            _control.ChangeState();
+            if( _control != null )
+            { 
+                _control.ChangeState();
+            }
         }
     }
 

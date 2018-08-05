@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
         //и формирование графического меню, к пунктам которого привязаны файлы-сценарии
 
 
-        public void StartLoad()
+    public void StartLoad()
     {
         print(" ====== MainMenu -> Кнопка Загрузка -> StartLoad() ====== ");
         _scriptHerder.Load("step01.xml", "world1.xml");
