@@ -19,6 +19,6 @@ public class MainMenu : MonoBehaviour
         public void StartLoad()
     {
         print(" ====== MainMenu -> Кнопка Загрузка -> StartLoad() ====== ");
-        _scriptHerder.Load("step01.xml");
+        _scriptHerder.Load("step01.xml", "world1.xml");
     }
 }

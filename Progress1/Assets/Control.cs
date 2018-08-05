@@ -12,6 +12,8 @@ public class Control : MonoBehaviour
         get { return _nativePath; }
     }
 
+    public static event ScriptHerder.MyEvent MyStateChanged;
+
     private void Awake()
     {
         _nativePath = CreatePath();
@@ -84,11 +86,11 @@ public class Control : MonoBehaviour
         _controlData.SetScale(gameObject.transform.localScale);
 
         // TODO получить от скрипта конкретного объекта параметры состояния:
-        // freeState: "fixed", "free", "hand", ""-это значит не используется
-        // openState: "close", "ajar", "open", ""-это значит не используется
+        // freeState: "fixed", "free", "hand_r", hand_l",  ""-это значит не используется
+        // openState: "close", "ajar", "open",  ""-это значит не используется
         // param
         // и записать в _controlData.state
-        if(_inter != null)
+        if (_inter != null)
         {
             State state = _inter.getState();
             _controlData.state = state;
@@ -98,7 +100,7 @@ public class Control : MonoBehaviour
 
     // ***************************** Взаимодействие с бизнес-логикой **************************************
 
-    // Митин скрипт передает ссылку на себя 
+    // Митин скрипт передает ссылку на себя в начале работы 
     public void SetInteractive(IInteractive inter)
     {
         _inter = inter;
@@ -107,8 +109,15 @@ public class Control : MonoBehaviour
     // Митин объект изменил свое состояние, нужно его запросить
     public void ChangeState()
     {
-        //State newState = _inter.getState();
-        //print(newState.param);
+        if (_controlData == null)
+        {
+            _controlData = new ControlData();
+        }
+        _controlData.state = _inter.getState();
+
+        // посылка сообщений в сценарий через вызов делегата
+        MyStateChanged(_nativePath, transform);
+
     }
 
     // *************************** Взаимодействие со сценарием *********************************************

@@ -10,8 +10,6 @@ public class ScriptData
 {
     public ScriptData() { }
 
-    [XmlAttribute("world")]
-    public string worldFileName;
     [XmlArray("actions"), XmlArrayItem("action")]
     public List<ActionData> actions = new List<ActionData>();
 

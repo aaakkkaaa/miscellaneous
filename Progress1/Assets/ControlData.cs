@@ -104,7 +104,7 @@ public class State
         param = p;
     }
     [XmlAttribute("freeState")]
-    public string freeState;    //fixed, free, hand,  не импользуем ""
+    public string freeState;    //fixed, free, hand_r, hand_l,  не импользуем ""
     [XmlAttribute("openState")]
     public string openState;    //close, ajar, open,  не импользуем ""
     [XmlAttribute("param")]
