@@ -28,7 +28,8 @@ public class ScriptHerder : MonoBehaviour
     {
         print("Обработчик: OnStateChanged" + ", Полное имя объекта в иерархии сцены: " + NativePath + ", Публикатор: " + mySenderTransf);
         print(mySenderTransf.position.ToString("F4"));
-        State state = mySenderTransf.gameObject.GetComponent<Control>().GetState();
+        //State state = mySenderTransf.gameObject.GetComponent<Control>().GetState();
+        string param = mySenderTransf.gameObject.GetComponent<Control>().GetState("openState");
     }
 
 }

@@ -125,7 +125,12 @@ public class Control : MonoBehaviour
     // Вызывается сценарием
     public State GetState()
     {
-        return _controlData.state;  // временно, потом уточнить
+        return _controlData.state;  
+    }
+    public string GetState(string property)
+    {
+        //return _controlData.state;  // анализировать параметры и отдавать значение
+        return "";
     }
 
 }
