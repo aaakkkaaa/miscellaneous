@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic title="Освоение тренажера">
+  <part name="Индивидуальная настройка маски VR">
+    <step number="1">
+      <task>Понять устройство маски VR</task>
+    </step>
+    <step number="2">
+      <task>Настроить маску под курсанта</task>
+    </step>
+    <part>
+      <step number="1">
+        <task>Первый опыт в витруальном пространстве</task>
+      </step>
+      <step number="2">
+        <task>Понять, как отображаются в виртуальном пространстве границы рабочей зоны</task>
+      </step>
+      <price>33000</price>
+    </part>
+  </part>
+</topic>
