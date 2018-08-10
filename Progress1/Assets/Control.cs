@@ -41,6 +41,7 @@ public class Control : MonoBehaviour
     public virtual void Init(ControlData cd)
     {
         _controlData = cd;
+        gameObject.SetActive(_controlData.active);
         // координаты, углы, масштаб
         gameObject.transform.localPosition = _controlData.GetPos();
         gameObject.transform.localEulerAngles = _controlData.GetRot();
@@ -58,8 +59,6 @@ public class Control : MonoBehaviour
                 _inter.setState(_controlData.state);
             }
         }
-
-        gameObject.SetActive(_controlData.active);
     }
 
     public virtual ControlData PrepareDataToSave()

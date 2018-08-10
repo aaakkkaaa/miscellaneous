@@ -91,8 +91,8 @@ public class WorldController : MonoBehaviour
             rang[i] = worldData.controlsData[i].currentPath.Split( new Char[] { '/' }).Length;
         }
         int pathLength = 1;     // длина пути, будем идти от наименьшей
-        int processed = 0;      // сколько обработано
-        while(processed < worldData.controlsData.Count)
+        int processed = 0;      // сколько контролов обработано
+        while(processed < worldData.controlsData.Count)     // пока не все контролы обработаны
         {
             for (int i = 0; i < worldData.controlsData.Count; ++i)
             {
@@ -104,12 +104,13 @@ public class WorldController : MonoBehaviour
                     string strCur = ctrl.CreatePath();
                     if (strCur != worldData.controlsData[i].currentPath)
                     {
-                        print("Надо перемещать");
+                        print(strWork + "  Надо перемещать в позицию " + worldData.controlsData[i].currentPath);
                         int lastSlesh = worldData.controlsData[i].currentPath.LastIndexOf('/');
                         string strParent = worldData.controlsData[i].currentPath.Remove(lastSlesh);
                         GameObject curParent = GameObject.Find(strParent); // ищем родителя по полному пути
-                        if(curParent != null)
+                        if(curParent == null)
                         {
+                            print("не нашли родителя для " + strWork + "  путь по которому искали: " + strParent);
                             ctrl.gameObject.transform.parent = curParent.transform;
                         }
                     }
@@ -119,49 +120,6 @@ public class WorldController : MonoBehaviour
             pathLength++;
         }
 
-/*
-        for (int i = 0; i < worldData.controlsData.Count; ++i)
-        {
-            // проверим, что объект не на месте 
-            string strWork = worldData.controlsData[i].nativePath;  
-            ctrl = _sourceControls[strWork];
-            string strCur = ctrl.CreatePath();
-            if(strCur != worldData.controlsData[i].currentPath)
-            {
-                print("Надо перемещать");
-                GameObject workObject = ctrl.gameObject;
-                string strParent = worldData.controlsData[i].parentPath;
-
-                GameObject workParent=null;
-                // это работает только если parent тоже Control и имеется в словаре. Обязательно ли это соблюдается?
-                try
-                { 
-                    workParent = _sourceControls[strParent].gameObject;
-                }
-                catch (KeyNotFoundException)
-                {
-                    print(strWork + " -> Родитель не является контролом " + strParent);
-                }
-                if (workParent != null)
-                {
-                    workObject.transform.parent = workParent.transform; // перекладываем
-                }
-                else
-                { 
-                    workParent = GameObject.Find(strParent); // ищем родителя по полному пути
-                    // TODO: Что делать, если родитель - не контрол, не понятно пока
-                    if (workParent != null)
-                    {
-                        workObject.transform.parent = workParent.transform; // перекладываем
-                    }
-                    else
-                    {
-                        print(strWork + " -> Не нашли родителя по его пути: " + strParent);
-                    }
-                }
-            }
-        }
-*/
 
         // инициализация
         for (int i = 0; i < worldData.controlsData.Count; ++i)
@@ -169,11 +127,10 @@ public class WorldController : MonoBehaviour
             ControlData cd = worldData.controlsData[i];
             //print("cd.nativePath = " + cd.nativePath);
             ctrl = _sourceControls[cd.nativePath];
-            print(i);
+            //print(i);
             ctrl.Init(cd);
         }
     }
-
 
     public void Save(string name)
     {
