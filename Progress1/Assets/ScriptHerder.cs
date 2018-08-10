@@ -28,8 +28,24 @@ public class ScriptHerder : MonoBehaviour
     {
         print("Обработчик: OnStateChanged" + ", Полное имя объекта в иерархии сцены: " + NativePath + ", Публикатор: " + mySenderTransf);
         print(mySenderTransf.position.ToString("F4"));
-        //State state = mySenderTransf.gameObject.GetComponent<Control>().GetState();
-        string param = mySenderTransf.gameObject.GetComponent<Control>().GetState("openState");
+
+        // Примеры вызовов, которые будут использоваться в процессе анализа предикторов
+        // Как получить значение предиктора вида [room/box.openState=open]
+        // Расчленяем на строки и загоняем их в переменные:
+        // string myPath (сюда пойдет "room/box")
+        // string propName (сюда пойдет "openState")
+        // string propValue (сюда пойдет "open")
+        // получить Control:
+        // Control ctrl = _worldController.SourceControls[myPath];
+        // Потом у контрола вызвать функцию:
+        // bool result = ctrl.GetState(propName, propValue);
+
+        // Если нужно проверять вхождение одного объекта имеющего компонент Control в другой, имеющий компонент Control
+        // Оба контролы, так как в предикторах используются NativePath
+        // [room/box.parent=room/bigbox1]
+        // Control ctrl = _worldController.SourceControls["room/box"];
+        // bool result = ctrl.CheckParent( "room/bigbox1" )
+
     }
 
 }

@@ -11,6 +11,8 @@ public class ControlData
     public string currentPath;              // место в иерархии, в котором объект оказался на момент сохранения данных
     [XmlAttribute("parentNativePath")]
     public string parentPath;               // это nativePath родителя в иерархии
+    [XmlAttribute("active")]
+    public bool active;                     // состояние активности gameObject
 
     public Vec3 pos;
     public Vec3 rot;

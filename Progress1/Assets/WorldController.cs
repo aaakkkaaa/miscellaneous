@@ -5,12 +5,16 @@ using System.Collections.Generic;
 
 public class WorldController : MonoBehaviour
 {
-    // путь к контролу на момент старта -> Control
+
+    // имя корневого объекта
+    private string _rootObjName = "room";
+    // список всех контролов, создается рекурсивным обходом, используется при загрузке и сохранении
+    private List<Control> _controls;
+    // Словарь: <Путь_к_контролу_на_момент_старта, Control>
     private Dictionary<string, Control> _sourceControls;
+
     // содержит список настроек контролов, считанных из XML
     public WorldData worldData;
-    // имя корневого объекта
-    private string rootObjName = "room";
 
     // Для сценария, если нужен доступ к контролу по "полному имени"
     public Dictionary<string, Control> SourceControls
@@ -27,14 +31,18 @@ public class WorldController : MonoBehaviour
     void Awake()
     {
         // Здесь room - родитель в котором должны быть все контролы
-        GameObject room = GameObject.Find(rootObjName);  
-        Control[] controls = room.GetComponentsInChildren<Control>();
-        print("controls.Count " + controls.Length);
+        GameObject room = GameObject.Find(_rootObjName);
+        // строим список всех контролов, рекурсивно обходя начиная с room
+        _controls = new List<Control>();
+        CreateControlList(room.transform);
+        print("controls.Count " + _controls.Count);
 
         // строим словарь "путь по состоянию на момент запуска" -> Control 
         _sourceControls = new Dictionary<string, Control>();
-        foreach (Control ctrl in controls)
+        foreach (Control ctrl in _controls)
         {
+            ctrl.NativePath = ctrl.CreatePath();
+            ctrl.worldController = this;
             print(ctrl.NativePath);
             _sourceControls.Add(ctrl.NativePath, ctrl);
         }
@@ -42,17 +50,37 @@ public class WorldController : MonoBehaviour
 
     private void Update()
     {
-        if ( Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown("s"))
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown("s"))
         {
             showGUI = !showGUI;
         }
-
     }
 
+    // рекурсивная функция для обхода всех начиная с Parent (включительно) и построения списка контролов
+    void CreateControlList( Transform parent )
+    {
+        Control ctrl = parent.gameObject.GetComponent<Control>();
+        if(ctrl != null )
+        {
+            _controls.Add(ctrl);
+        }
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            CreateControlList(parent.GetChild(i));
+        }
+    }
+
+    // загрузка xml описания мира, активизация всех контролов, расстановка их 
     public void Load(string name)
     {
         worldData = WorldData.Load(Path.Combine(Application.dataPath, name));
         Control ctrl;
+
+        // активировать все объекты из словара _sourceControls
+        foreach (Control c in _sourceControls.Values)
+        {
+            c.gameObject.SetActive(true);
+        }
 
         // разложить все Control по правильным местам в иерархии
         for (int i = 0; i < worldData.controlsData.Count; ++i)
@@ -66,8 +94,34 @@ public class WorldController : MonoBehaviour
                 print("Надо перемещать");
                 GameObject workObject = ctrl.gameObject;
                 string strParent = worldData.controlsData[i].parentPath;
-                GameObject workParent = _sourceControls[strParent].gameObject;
-                workObject.transform.parent = workParent.transform;
+
+                GameObject workParent=null;
+                // это работает только если parent тоже Control и имеется в словаре. Обязательно ли это соблюдается?
+                try
+                { 
+                    workParent = _sourceControls[strParent].gameObject;
+                }
+                catch (KeyNotFoundException)
+                {
+                    print(strWork + " -> Родитель не является контролом " + strParent);
+                }
+                if (workParent != null)
+                {
+                    workObject.transform.parent = workParent.transform; // перекладываем
+                }
+                else
+                { 
+                    workParent = GameObject.Find(strParent); // ищем родителя по полному пути
+                    // TODO: Что делать, если родитель - не контрол, не понятно пока
+                    if (workParent != null)
+                    {
+                        workObject.transform.parent = workParent.transform; // перекладываем
+                    }
+                    else
+                    {
+                        print(strWork + " -> Не нашли родителя по его пути: " + strParent);
+                    }
+                }
             }
         }
         // инициализация
@@ -84,23 +138,34 @@ public class WorldController : MonoBehaviour
 
     public void Save(string name)
     {
-        // получить список контролов на момент сохранения
-        GameObject room = GameObject.Find(rootObjName);
-        Control[] controls = room.GetComponentsInChildren<Control>();
         // создать список для сохранения данных каждого Control
         worldData = new WorldData();
         worldData.controlsData = new List<ControlData>();
-        for(int i=0; i<controls.Length; ++i)
+        for(int i=0; i<_controls.Count; ++i)
         {
             print(i);
-            ControlData cd = controls[i].PrepareDataToSave();
+            ControlData cd = _controls[i].PrepareDataToSave();
             worldData.controlsData.Add(cd);
         }
-        worldData.worldRoot = rootObjName;
-
+        worldData.worldRoot = _rootObjName;
 
         worldData.Save(Path.Combine(Application.dataPath, name));
     }
+
+    // построение пути до корня
+    public string CreatePath( GameObject obj )
+    {
+        Transform curTransform = obj.transform;
+        string p = obj.name;
+
+        while (curTransform.parent != null)
+        {
+            p = curTransform.parent.gameObject.name + "/" + p;
+            curTransform = curTransform.parent;
+        }
+        return p;
+    }
+
 
     // для отладки - интерфейс для загрузки и сохранения в xml
     string _fileName;
