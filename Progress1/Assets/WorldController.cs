@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class WorldController : MonoBehaviour
 {
@@ -73,8 +74,9 @@ public class WorldController : MonoBehaviour
     // загрузка xml описания мира, активизация всех контролов, расстановка их 
     public void Load(string name)
     {
-        worldData = WorldData.Load(Path.Combine(Application.dataPath, name));
         Control ctrl;
+
+        worldData = WorldData.Load(Path.Combine(Application.dataPath, name));
 
         // активировать все объекты из словара _sourceControls
         foreach (Control c in _sourceControls.Values)
@@ -83,6 +85,41 @@ public class WorldController : MonoBehaviour
         }
 
         // разложить все Control по правильным местам в иерархии
+        int[] rang = new int[worldData.controlsData.Count]; // для хранения длинн пути
+        for (int i = 0; i < worldData.controlsData.Count; ++i)
+        {
+            rang[i] = worldData.controlsData[i].currentPath.Split( new Char[] { '/' }).Length;
+        }
+        int pathLength = 1;     // длина пути, будем идти от наименьшей
+        int processed = 0;      // сколько обработано
+        while(processed < worldData.controlsData.Count)
+        {
+            for (int i = 0; i < worldData.controlsData.Count; ++i)
+            {
+                if(rang[i] == pathLength)   
+                {
+                    // проверим, на месте ли объект
+                    string strWork = worldData.controlsData[i].nativePath;
+                    ctrl = _sourceControls[strWork];
+                    string strCur = ctrl.CreatePath();
+                    if (strCur != worldData.controlsData[i].currentPath)
+                    {
+                        print("Надо перемещать");
+                        int lastSlesh = worldData.controlsData[i].currentPath.LastIndexOf('/');
+                        string strParent = worldData.controlsData[i].currentPath.Remove(lastSlesh);
+                        GameObject curParent = GameObject.Find(strParent); // ищем родителя по полному пути
+                        if(curParent != null)
+                        {
+                            ctrl.gameObject.transform.parent = curParent.transform;
+                        }
+                    }
+                    processed++;
+                }
+            }
+            pathLength++;
+        }
+
+/*
         for (int i = 0; i < worldData.controlsData.Count; ++i)
         {
             // проверим, что объект не на месте 
@@ -124,6 +161,8 @@ public class WorldController : MonoBehaviour
                 }
             }
         }
+*/
+
         // инициализация
         for (int i = 0; i < worldData.controlsData.Count; ++i)
         {

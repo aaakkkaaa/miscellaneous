@@ -73,20 +73,6 @@ public class Control : MonoBehaviour
         _controlData.currentPath = CreatePath();
         print("_controlData.nativePath "+ _controlData.nativePath);
 
-        GameObject parent;
-        if (gameObject.transform.parent == null)
-        {
-            _controlData.parentPath = "";
-            // TODO: этой проверки не достаточно, надо проверить, если parent есть, что он Control
-        }
-        else
-        {
-            parent = gameObject.transform.parent.gameObject;
-            Control parentControl = parent.GetComponent<Control>();
-            print("parentControl = " + parentControl);
-            _controlData.parentPath = parentControl.NativePath;
-        }
-
         // координаты, углы, масштаб
         _controlData.SetPos(gameObject.transform.localPosition);
         _controlData.SetRot(gameObject.transform.localEulerAngles);
