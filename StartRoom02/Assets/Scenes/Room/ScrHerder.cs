@@ -8,6 +8,11 @@ using UnityEngine;
 
 public class ScrHerder : MonoBehaviour
 {
+    // Источник информации об объектах и т.д.
+    private WorldController _worldController;
+    // Делегат - для получения событий от Control
+    public delegate void MyEvent(string NativePath, Transform mySenderTransf);
+
 
     //================= UI курсанта ================
 
@@ -27,6 +32,9 @@ public class ScrHerder : MonoBehaviour
 
     // Подсветка
     Transform myLightBallTr;
+
+    // Таймер ожидания
+    Coroutine myTimer;
 
     //================= Для работы с XML ================
 
@@ -82,6 +90,11 @@ public class ScrHerder : MonoBehaviour
 
         // Полный путь к файлу XML
         myXFilePathName = Path.Combine(Directory.GetCurrentDirectory(), myDataPath, myXFilePath, myXFileName);
+
+        // Источник информации об объектах и т.д.
+        _worldController = GetComponent<WorldController>();
+        // Подписка на события из Control
+        Control.MyStateChanged += MyControlEvent;
 
     }
 
@@ -229,26 +242,37 @@ public class ScrHerder : MonoBehaviour
     void MyActionPrepare(XElement myAct)
     {
         // Выполнить команды для стандартных объектов
-        MyCommands(myAct);
+        MyStdCommands(myAct);
 
-
-        // Выполнить произвольные .
-
+        // Выполнить команды для произвольных объектов
+        myCustomCommands(myAct);
 
         // Сформировать условия + и условия -
-
+        //...
 
         // Запустить таймер ожидания
-
+        XElement myWait = myAct.Element("wait");
+        if (myWait != null)
+        {
+            int myWaitTime = 15;
+            XAttribute myTime = myWait.Attribute("time");
+            if (myTime != null)
+            {
+                int.TryParse(myTime.Value, out myWaitTime);
+            }
+            print("myWaitTime = " + myWaitTime);
+            myTimer = StartCoroutine(MyTimer(myWaitTime));
+        }
 
     }
 
     // Выполнить команды для стандартных объектов
-    void MyCommands(XElement myEl)
+    void MyStdCommands(XElement myEl)
     {
         // Интструкция. Подготовить и включить.
-        IEnumerable<XElement> myInstrPages = myEl.Elements("instr"); // все элементы <instr> в данном шаге
+        IEnumerable<XElement> myInstrPages = myEl.Elements("instr"); // все элементы <instr> в данном узле
         int myPagesCount = myInstrPages.Count(); // сколько в инструкции страниц
+        // Делаем, если инструкции есть
         if (myPagesCount > 0)
         {
             string[] myIns = new string[myPagesCount];
@@ -264,18 +288,99 @@ public class ScrHerder : MonoBehaviour
 
         // Подсветка
         XElement myLight = myEl.Element("light");
-        string myObjPath = myLight.Value;
-        Transform myObjTr = GameObject.Find(myObjPath).transform; // ВРЕМЕННО! Заменить на обращение к World
-        print("Объект для подсветки: " + myObjPath + ", его трансформ: " + myObjTr);
-        // Перевести шарик подсветки в детей целевого объекта, совместить с ним и включить
-        myLightBallTr.parent = myObjTr;
-        myLightBallTr.localPosition = Vector3.zero;
-        myLightBallTr.gameObject.SetActive(true);
+        // Делаем, если подсветка есть
+        if(myLight != null)
+        {
+            string myObjPath = myLight.Value;
+            Transform myObjTr = GameObject.Find(myObjPath).transform; // ВРЕМЕННО! Заменить на обращение к World
+            print("Объект для подсветки: " + myObjPath + ", его трансформ: " + myObjTr);
+            // Перевести шарик подсветки в детей целевого объекта, совместить с ним и включить
+            myLightBallTr.parent = myObjTr;
+            myLightBallTr.localPosition = Vector3.zero;
+            myLightBallTr.gameObject.SetActive(true);
+        }
 
         // Куда смотреть
+        XElement myToSee = myEl.Element("tosee");
+        if (myToSee != null)
+        {
+            string myObjPath = myToSee.Value;
+            Transform myObjTr = GameObject.Find(myObjPath).transform; // ВРЕМЕННО! Заменить на обращение к World
+            print("Объект 'Куда смотреть': " + myObjPath + ", его трансформ: " + myObjTr);
+            // Установить глобальное свойство - трансформ, на который желательно смотреть курсанту.
+            myGlobals.GlWhatToSeeTr = myObjTr;
+        }
 
         // Сообщение
+        XElement myMessage = myEl.Element("message");
+        if (myMessage != null)
+        {
+            myGlobals.GlShowMessage(myMessage.Value);
+        }
 
+    }
+
+    // Выполнить команды для произвольных объектов
+    void myCustomCommands(XElement myEl)
+    {
+        // Обрабатывем элемент commands в данном узле
+        XElement myCommands = myEl.Element("commands");
+        // Все элементы object в данном узле - это и есть команды
+        IEnumerable<XElement> myObjects = myCommands.Elements("object");
+        // Делаем, если команды есть
+        if (myObjects.Count() > 0)
+        {
+            foreach (XElement el in myObjects)
+            {
+                print("el = " + el);
+                // Объект
+                Transform myObjTr = GameObject.Find(el.Attribute("nativePath").Value).transform; // ВРЕМЕННО! Заменить на обращение к World
+
+                // Состояние активности
+                XElement myActive = el.Element("active");
+                if(myActive != null)
+                {
+                    string myActiveState = myActive.Attribute("state").Value;
+                    bool myState;
+                    if (bool.TryParse(myActiveState, out myState))
+                    {
+                        myObjTr.gameObject.SetActive(myState);
+                    }
+                    print("myActiveState = " + myActiveState + " myState = " + myState);
+                }
+
+                // Новый родитель
+                XElement myParent = el.Element("parent");
+                if (myParent != null)
+                {
+                    XAttribute myParentAttr = myParent.Attribute("par");
+                    if (myParentAttr != null)
+                    {
+                        string myParentPath = myParentAttr.Value;
+                        Transform myParTr = GameObject.Find(myParentPath).transform; // ВРЕМЕННО! Заменить на обращение к World
+                        myObjTr.parent = myParTr;
+                    }
+                    else
+                    {
+                        print("myParentAttribute == null");
+                    }
+                }
+                else
+                {
+                    print("myParentNode == null");
+                }
+            }
+        }
+
+
+
+    }
+
+    // Таймер ожидания действий курсанта
+    IEnumerator MyTimer(int myWaitTime)
+    {
+        yield return new WaitForSeconds(myWaitTime);
+        MyTimerEvent();
     }
 
 
@@ -283,17 +388,50 @@ public class ScrHerder : MonoBehaviour
     // ==========================================================================================================
 
     // Обработчик событий объектов, имеющих Control
-    void MyControlEvent(string myStepID)
+    void MyControlEvent(string NativePath, Transform mySenderTransf)
     {
+        print("Обработчик: OnStateChanged" + ", Полное имя объекта в иерархии сцены: " + NativePath + ", Публикатор: " + mySenderTransf);
+        print(mySenderTransf.position.ToString("F4"));
+
+        // Примеры вызовов, которые будут использоваться в процессе анализа предикторов
+        // Как получить значение предиктора вида [room/box.openState=open]
+        // Расчленяем на строки и загоняем их в переменные:
+        // string myPath (сюда пойдет "room/box")
+        // string propName (сюда пойдет "openState")
+        // string propValue (сюда пойдет "open")
+        // получить Control:
+        // Control ctrl = _worldController.SourceControls[myPath];
+        // Потом у контрола вызвать функцию:
+        // bool result = ctrl.GetState(propName, propValue);
+
+        // Если нужно проверять вхождение одного объекта имеющего компонент Control в другой, имеющий компонент Control
+        // Оба контролы, так как в предикторах используются NativePath
+        // [room/box.parent=room/bigbox1]
+        // Control ctrl = _worldController.SourceControls["room/box"];
+        // bool result = ctrl.CheckParent( "room/bigbox1" )
 
     }
 
 
     // ==========================================================================================================
 
-    // Обработчик событий таймера окончания ожидания
-    void MyTimerEvent(string myStepID)
+    // Обработчик таймера окончания ожидания
+    void MyTimerEvent()
     {
+
+    }
+
+    // Конец действия action
+    void MyActionEnd()
+    {
+        //Выключить таймер
+        StopCoroutine(myTimer);
+
+        //Выключить подсветку
+        //...
+
+        //Выключить "куда смотреть"
+        //...
 
     }
 }

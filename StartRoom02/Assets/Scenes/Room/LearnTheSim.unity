@@ -1973,6 +1973,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1090862906}
+  - component: {fileID: 1090862907}
+  - component: {fileID: 1090862908}
   m_Layer: 0
   m_Name: ButtonMenu
   m_TagString: Untagged
@@ -1993,6 +1995,28 @@ Transform:
   m_Father: {fileID: 1792283987}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1090862907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1090862905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01738a0d0cbd3a4409889eb5d5b741ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1090862908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1090862905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfc51e0157c16c3479c05406e83b0646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1112013343
 GameObject:
   m_ObjectHideFlags: 0
@@ -3225,6 +3249,7 @@ GameObject:
   - component: {fileID: 1698136670}
   - component: {fileID: 1698136669}
   - component: {fileID: 1698136671}
+  - component: {fileID: 1698136672}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Boss
@@ -3268,6 +3293,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 026d1f8e85af8c0418eb14c0ea1299ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1698136672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1698136668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 538ad5cb28bb9024babfc830abdcb198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1785349369

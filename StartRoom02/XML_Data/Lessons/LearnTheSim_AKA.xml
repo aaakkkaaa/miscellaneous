@@ -6,19 +6,19 @@
       <action num="1">
         <instr>На правом контроллере нажмите большим пальцем кнопку "Меню".</instr>
         <light>ViveControllerRight/ButtonMenu</light>
-        <tosee>Правый контроллер</tosee>
+        <tosee>ViveControllerRight</tosee>
         <commands>
-          <object nativePath="room">
+          <object nativePath="ViveControllerRight">
             <active state="true" />
-            <parent par="Новый родитель" />
-            <pos x="-1.07" y="0.86" z="0" />
-            <rot x="0" y="0" z="0" />
+            <parent par="Room" />
+            <pos x="0.296" y="1.5" z="-0.74" />
+            <rot x="0" y="0" z="50" />
             <scale x="2" y="2" z="2" />
             <state freeState="free" openState="close" param="10"/>
           </object>
         </commands>
         <wait time="30">
-          <message>Нажмите кнопку "Меню".</message>
+          <message>Нажмите кнопку "Меню"</message>
         </wait>
         <plus condition="[ViveControllerRight/ButtonMenu.downState=down]">
             <message>Кнопка "Меню" нажата</message>
@@ -37,7 +37,7 @@
         <instr>Вы нажали кнопку "Меню". Чтобы продолжить нажмите кнопку "Меню" еще раз.</instr>
         <instr>Вторая страница инструкции</instr>
         <instr>Третья страница инструкции</instr>
-        <tosee>Правый контроллер</tosee>
+        <tosee>ViveControllerRight</tosee>
         <wait time="15">
           <light>ViveControllerRight/ButtonMenu</light>
           <message>Нажмите кнопку "Меню".</message>
@@ -61,8 +61,8 @@
     <step num="20" task="Кнопка Меню левого контроллера">
       <action num="1">
         <instr>На левом контроллере нажмите большим пальцем кнопку "Меню".</instr>
-        <light>Кнопка Меню на левом контроллере</light>
-        <tosee>Левый контроллер</tosee>
+        <light>ViveControllerLeft/ButtonMenu</light>
+        <tosee>ViveControllerLeft</tosee>
         <wait time="10">
           <message>Нажмите кнопку "Меню".</message>
         </wait>
@@ -73,7 +73,7 @@
 
       <action num="2">
         <instr>Вы нажали кнопку "Меню". Чтобы продолжить нажмите кнопку "Меню" еще раз.</instr>
-        <tosee>Левый контроллер</tosee>
+        <tosee>ViveControllerLeft</tosee>
         <wait>
           <message>Нажмите кнопку "Меню".</message>
         </wait>
@@ -84,7 +84,7 @@
           <message>Кнопка "Меню" нажата</message>
         </plus>
         <minus>
-            <light>Кнопка Меню на левом контроллере</light>
+            <light>ViveControllerLeft/ButtonMenu</light>
             <message>Нажмите кнопку "Меню".</message>
           </minus>
       </action>

@@ -9,8 +9,8 @@ public class ControlData
     public string nativePath;               // место в иерархии в исходном состоянии
     [XmlAttribute("currentPath")]
     public string currentPath;              // место в иерархии, в котором объект оказался на момент сохранения данных
-    [XmlAttribute("parentNativePath")]
-    public string parentPath;               // это nativePath родителя в иерархии
+    [XmlAttribute("active")]
+    public bool active;                     // состояние активности gameObject
 
     public Vec3 pos;
     public Vec3 rot;
@@ -107,6 +107,8 @@ public class State
     public string freeState;    //fixed, free, hand_r, hand_l,  не импользуем ""
     [XmlAttribute("openState")]
     public string openState;    //close, ajar, open,  не импользуем ""
+    [XmlAttribute("downState")]
+    public string downState;    //up, down
     [XmlAttribute("param")]
     public float param;         // 0..100,  не импользуем -1
 }

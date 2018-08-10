@@ -19,7 +19,7 @@ public class MitiaScript : MonoBehaviour, IInteractive
 
         // это для примера, внутренняя структура:
         _cover = transform.Find("cover").gameObject;
-        print("_cover = " + _cover);
+        //print("_cover = " + _cover);
     }
 
     void Update ()

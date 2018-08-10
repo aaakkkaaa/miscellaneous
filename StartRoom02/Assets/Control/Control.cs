@@ -3,25 +3,27 @@
 public class Control : MonoBehaviour
 {
     protected ControlData _controlData;             // хранение, загрузка, выгрузка данных о состоянии этого Control
-    protected WorldController _worldController;     // !!! скрипт описания мира, возможно он не нужен !!!
-    private IInteractive _inter;                    // скрипт бизнес логики
+    private WorldController _worldController;       // скрипт описания мира
+    private IInteractive _inter;                    // скрипт бизнес логики, привязанные к тому же gameObject
 
     private string _nativePath;
     public string NativePath
     {
         get { return _nativePath; }
+        set { _nativePath = value; }
+    }
+
+    public WorldController worldController
+    {
+        set
+        {
+            _worldController = value;
+        }
     }
 
     public static event ScriptHerder.MyEvent MyStateChanged;
 
-    private void Awake()
-    {
-        _nativePath = CreatePath();
-        //print(name + "   " + _nativePath );
-        GameObject wcObject = GameObject.Find("Boss");
-        _worldController = wcObject.GetComponent<WorldController>();
-    }
-
+    
     public string CreatePath()
     {
         Transform curTransform = transform;
@@ -34,25 +36,29 @@ public class Control : MonoBehaviour
         }
         return p;
     }
+    
 
     public virtual void Init(ControlData cd)
     {
         _controlData = cd;
+        gameObject.SetActive(_controlData.active);
         // координаты, углы, масштаб
         gameObject.transform.localPosition = _controlData.GetPos();
         gameObject.transform.localEulerAngles = _controlData.GetRot();
         gameObject.transform.localScale = _controlData.GetScale();
 
+        // передать данные для инициализации объекту IInteractive
         if (_controlData.state == null)
         {
             print(cd.nativePath + "   cd.state = null");
         }
         else
         {
-            // TODO передать state в скрипт отвечающий за геометрию и интерактивность:
-            // _controlData.state.freeState; _controlData.state.openState; _controlData.state.param; 
+            if(_inter != null)
+            {
+                _inter.setState(_controlData.state);
+            }
         }
-
     }
 
     public virtual ControlData PrepareDataToSave()
@@ -66,26 +72,12 @@ public class Control : MonoBehaviour
         _controlData.currentPath = CreatePath();
         print("_controlData.nativePath "+ _controlData.nativePath);
 
-        GameObject parent;
-        if (gameObject.transform.parent == null)
-        {
-            _controlData.parentPath = "";
-            // TODO этой проверки не достаточно, надо проверить, если parent есть, что он Control
-        }
-        else
-        {
-            parent = gameObject.transform.parent.gameObject;
-            Control parentControl = parent.GetComponent<Control>();
-            print("parentControl = " + parentControl);
-            _controlData.parentPath = parentControl.NativePath;
-        }
-
         // координаты, углы, масштаб
         _controlData.SetPos(gameObject.transform.localPosition);
         _controlData.SetRot(gameObject.transform.localEulerAngles);
         _controlData.SetScale(gameObject.transform.localScale);
 
-        // TODO получить от скрипта конкретного объекта параметры состояния:
+        // получаем от скрипта IInteractive конкретного объекта параметры состояния:
         // freeState: "fixed", "free", "hand_r", hand_l",  ""-это значит не используется
         // openState: "close", "ajar", "open",  ""-это значит не используется
         // param
@@ -95,6 +87,7 @@ public class Control : MonoBehaviour
             State state = _inter.getState();
             _controlData.state = state;
         }
+        _controlData.active = gameObject.activeSelf;
         return _controlData;
     }
 
@@ -122,15 +115,40 @@ public class Control : MonoBehaviour
 
     // *************************** Взаимодействие со сценарием *********************************************
 
-    // Вызывается сценарием
+    // возвращает полное состояние контрола
     public State GetState()
     {
         return _controlData.state;  
     }
+
+    // возвращает значение конкретного состояния
     public string GetState(string property)
     {
-        //return _controlData.state;  // анализировать параметры и отдавать значение
-        return "";
+        switch (property)       // если список будет увеличиваться, может сделать словарь?
+        {
+            case "freeState":
+                return _controlData.state.freeState;
+            case "openState":
+                return _controlData.state.openState;
+            case "downState":
+                return _controlData.state.downState;  // down или up
+            default:
+                return "";
+        }
+    }
+
+    // возвращает значение конкретного состояния
+    public bool GetState(string property, string value)
+    {
+        return (value == GetState(property)); 
+    }
+
+
+    // По переданному NativePath проверяем, является ли он родителем данного объекта?
+    public bool CheckParent( string anyPath )
+    {
+        Control candidat = _worldController.SourceControls[anyPath];
+        return (transform.parent.gameObject == candidat.gameObject);
     }
 
 }
