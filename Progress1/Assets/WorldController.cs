@@ -111,6 +111,9 @@ public class WorldController : MonoBehaviour
                         if(curParent == null)
                         {
                             print("не нашли родителя для " + strWork + "  путь по которому искали: " + strParent);
+                        }
+                        else
+                        {
                             ctrl.gameObject.transform.parent = curParent.transform;
                         }
                     }

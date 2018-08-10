@@ -18,18 +18,17 @@
     </control>
     <control nativePath="room/box1" currentPath="room/box1" active="true">
       <pos x="3.5" y="2.05" z="-1.7" />
-      <rot x="-1.06721707E-07" y="346.112335" z="11.9644108" />
+      <rot x="-1.06721707E-07" y="346.112335" z="11.96441" />
       <state freeState="free" openState="open" param="-300" />
     </control>
-    <control nativePath="room/bigBox2" currentPath="room/bigBox2" active="true">
-      <pos x="-1.07" y="0.86" z="-4.44" />
+    <control nativePath="room/bigBox2" currentPath="room/bigBox/bigBox2" active="true">
+      <pos x="0" y="0" z="-2.22" />
       <rot x="0" y="0" z="0" />
-      <scale x="2" y="2" z="2" />
     </control>
-    <control nativePath="room/bigBox2/box3" currentPath="room/bigBox2/box3" active="true">
-      <pos x="0" y="0" z="0" />
+    <control nativePath="room/bigBox2/box3" currentPath="room/bigBox/bigBox2/Cylinder2/box3" active="true">
+      <pos x="-6.67000055" y="-0.659999967" z="0.4920001" />
       <rot x="0" y="0" z="0" />
-      <scale x="0.58501" y="0.49043" z="0.54418" />
+      <scale x="1.1700201" y="0.98086" z="1.08836" />
       <state freeState="free" openState="open" param="-300" />
     </control>
   </controls>

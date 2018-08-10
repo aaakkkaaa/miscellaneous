@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<step xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <actions>
-	  <action num="1"/>
-	  <action num="2"/>
-	  <action num="3"/>
-  </actions>
-</step>
