@@ -23,13 +23,13 @@
         <plus condition="[ViveControllerRight/ButtonMenu.downState=down]">
             <message>Кнопка "Меню" нажата</message>
         </plus>
-        <minus condition="[ViveControllerLeft/ButtonGrip.downState=down]">
+        <minus condition="[ViveControllerLeft/ButtonGrip.downState=down] or [ViveControllerRight/ButtonGrip.downState=down]">
           <light>ViveControllerRight/ButtonMenu</light>
-          <message>Нажмите кнопку "Меню".</message>
+          <message>Нажмите кнопку "Меню"</message>
         </minus>
-        <minus condition="[ViveControllerRight/ButtonGrip.downState=down]">
+        <minus condition="[ViveControllerRight/ButtonTrigger.downState=down]">
           <light>ViveControllerRight/ButtonMenu</light>
-          <message>Нажмите кнопку "Меню".</message>
+          <message>Нажмите кнопку "Меню"</message>
         </minus>
       </action>
       
@@ -40,7 +40,7 @@
         <tosee>ViveControllerRight</tosee>
         <wait time="15">
           <light>ViveControllerRight/ButtonMenu</light>
-          <message>Нажмите кнопку "Меню".</message>
+          <message>Нажмите кнопку "Меню"</message>
         </wait>
         <plus condition="[ViveControllerRight/ButtonMenu.downState=down]">
             <next act="0"/> <!-- номер следующего action, если 0 - то выход на конец шага -->
@@ -49,11 +49,11 @@
         </plus>
         <minus condition="[ViveControllerLeft/ButtonGrip.downState=down]">
             <light>ViveControllerRight/ButtonMenu</light>
-            <message>Нажмите кнопку "Меню".</message>
+            <message>Нажмите кнопку "Меню"</message>
         </minus>
         <minus condition="[ViveControllerRight/ButtonGrip.downState=down]">
           <light>ViveControllerRight/ButtonMenu</light>
-          <message>Нажмите кнопку "Меню".</message>
+          <message>Нажмите кнопку "Меню"</message>
         </minus>
       </action>
     </step>
@@ -64,7 +64,7 @@
         <light>ViveControllerLeft/ButtonMenu</light>
         <tosee>ViveControllerLeft</tosee>
         <wait time="10">
-          <message>Нажмите кнопку "Меню".</message>
+          <message>Нажмите кнопку "Меню"</message>
         </wait>
         <plus condition="[path(Левый контроллер, кнопка Меню).downState=down]">
           <message>Кнопка "Меню" нажата</message>
@@ -75,7 +75,7 @@
         <instr>Вы нажали кнопку "Меню". Чтобы продолжить нажмите кнопку "Меню" еще раз.</instr>
         <tosee>ViveControllerLeft</tosee>
         <wait>
-          <message>Нажмите кнопку "Меню".</message>
+          <message>Нажмите кнопку "Меню"</message>
         </wait>
         <plus condition="[path(Левый контроллер, кнопка Меню).downState=down]">
           <message>Кнопка "Меню" нажата</message>
@@ -85,7 +85,7 @@
         </plus>
         <minus>
             <light>ViveControllerLeft/ButtonMenu</light>
-            <message>Нажмите кнопку "Меню".</message>
+            <message>Нажмите кнопку "Меню"</message>
           </minus>
       </action>
     </step>

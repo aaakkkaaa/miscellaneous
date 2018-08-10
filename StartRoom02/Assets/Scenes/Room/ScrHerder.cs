@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -35,6 +36,8 @@ public class ScrHerder : MonoBehaviour
 
     // Таймер ожидания
     Coroutine myTimer;
+    // Дополнительная блокировка таймера
+    bool myTimersStopped = true;
 
     //================= Для работы с XML ================
 
@@ -159,6 +162,13 @@ public class ScrHerder : MonoBehaviour
         {
             myGlobals.GlShowMessage("Нажато два. Пока, мир!", 1); // Публикуем событие - вывод сообщения
         }
+        // Проверка Препарсера
+        else if (Input.GetKeyDown("3"))
+        {
+            MyPreParser("[ViveControllerLeft/ButtonGrip.downState=down] or [ViveControllerRight/ButtonGrip.downState=down]");
+        }
+
+
     }
 
     // ==========================================================================================================
@@ -261,6 +271,7 @@ public class ScrHerder : MonoBehaviour
                 int.TryParse(myTime.Value, out myWaitTime);
             }
             print("myWaitTime = " + myWaitTime);
+            myTimersStopped = false; // дополнительная блокировка таймера
             myTimer = StartCoroutine(MyTimer(myWaitTime));
         }
 
@@ -380,6 +391,7 @@ public class ScrHerder : MonoBehaviour
     IEnumerator MyTimer(int myWaitTime)
     {
         yield return new WaitForSeconds(myWaitTime);
+        print("myTimer Wait " + myWaitTime);
         MyTimerEvent();
     }
 
@@ -412,12 +424,109 @@ public class ScrHerder : MonoBehaviour
 
     }
 
+    // Предварительная подготовка логического условия
+    // Пример строки myCondition: "[ViveControllerLeft/ButtonGrip.downState=down] or [ViveControllerRight/ButtonGrip.downState=down]"
+
+    // Здесь будем хранить единичные условия и их "координаты" в общей строке
+    struct MyPredicate
+    {
+        public string PrString;
+        public int OpenBr;
+        public int CloseBr;
+    }
+
+    string MyPreParser(string myCondition)
+    {
+
+        if (myCondition == "")
+        {
+            print("MyPreParser: Ошибка! Для подготовки логического условия передана пустая строка.");
+            return "";
+        }
+
+        // Массив структур для отдельных условий
+        List<MyPredicate> myPredicates = new List<MyPredicate>();
+
+        // Соберем выделенные в [...] единичные условия в массив List
+        int myStart = 0; // с какого символа начинать поиск
+        for(int i=0; i<100; i++) // на всякий случай число возможных предикатов ограничено
+        {
+            // Ищем [
+            int myOpenBracket = myCondition.IndexOf("[", myStart);
+            if (myOpenBracket == -1) // Открывающая скобка не найдена
+            {
+                break; // Больше нет единичных условий
+            }
+            // Ищем ]
+            int myCloseBracket = myCondition.IndexOf("]", myStart);
+            if (myCloseBracket == -1) // Закрывающая скобка не найдена
+            {
+                print("MyPreParser: Ошибка! При подготовке логического условия обнаружена незакрытая квадратная скобка.");
+                return "";
+            }
+
+            // Вырежем единичное условие и заполним структуру
+            MyPredicate myPredicate = new MyPredicate();
+            myPredicate.PrString = myCondition.Substring(myOpenBracket + 1, myCloseBracket - myOpenBracket - 1);
+            myPredicate.OpenBr = myOpenBracket;
+            myPredicate.CloseBr = myCloseBracket;
+
+            //print("myStart = " + myStart + " myOpenBracket = " + myOpenBracket + " myCloseBracket = " + myCloseBracket + " mySubStr = " + myPredicate.PrString);
+
+            // Добавим структуру в массив
+            myPredicates.Add(myPredicate);
+            // Новый старт для поиска
+            myStart = myCloseBracket + 1;
+            if(myStart >= myCondition.Length)
+            {
+                break; // дошли до конца строки
+            }
+        }
+
+        // Cтрока для формирования окончательного логического выражения
+        StringBuilder myCond = new StringBuilder();
+
+
+        // Обработаем каждый предикат
+        for(int i=0; i < myPredicates.Count; i++)
+        {
+            string[] mySubStr = myPredicates[i].PrString.Split(new char[] { '.', '=' });
+            string myPath = mySubStr[0];
+            string propName = mySubStr[1];
+            string propValue = mySubStr[2];
+
+            // Получить Control:
+            //Control ctrl = _worldController.SourceControls[myPath];
+            // Получить логическое значение предиката
+            //bool result = ctrl.GetState(propName, propValue);
+
+            bool result = true;
+
+            // Заменить в строке условий [...] на его логическое значение
+            myCond.Append(result);
+            if(i < myPredicates.Count - 1)
+            {
+                myCond.Append(myCondition.Substring(myPredicates[i].CloseBr+1, myPredicates[i+1].OpenBr - myPredicates[i].CloseBr - 1));
+            }
+            print("myCond = " + myCond);
+        }
+
+        return myCond.ToString();
+    }
+
+
+
+
 
     // ==========================================================================================================
 
     // Обработчик таймера окончания ожидания
     void MyTimerEvent()
     {
+        if(myTimersStopped)
+        {
+            return;
+        }
 
     }
 
@@ -425,6 +534,7 @@ public class ScrHerder : MonoBehaviour
     void MyActionEnd()
     {
         //Выключить таймер
+        myTimersStopped = true; // дополнительная блокировка таймера
         StopCoroutine(myTimer);
 
         //Выключить подсветку

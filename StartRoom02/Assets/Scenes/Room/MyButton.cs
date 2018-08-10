@@ -22,11 +22,11 @@ public class MyButton : MonoBehaviour, IInteractive {
         // ПРОВЕРИТЬ! Пока используем стандартный input
         if (Input.GetButtonDown("RightMenuButt"))
         {
-            print("Меня нажали!!!!!!!!!!!!!!!!!!!");
+            print("Меня нажали!!!!!!!!!!!!!!!!!!! RightMenuButt");
         }
-        else if (Input.GetButtonUp("RightMenuButt"))
+        else if (Input.GetButtonUp("LeftMenuButt"))
         {
-            print("Меня нажали!!!!!!!!!!!!!!!!!!!");
+            print("Меня нажали!!!!!!!!!!!!!!!!!!! LeftMenuButt");
         }
         else if (Input.GetKeyDown("f"))
         {
