@@ -194,7 +194,7 @@ public class ScrHerder : MonoBehaviour
         string[] myIDs = myStepID.Split(new char[] { '.' });
         print("myStep = " + myIDs[0] + " " + myIDs[1] + " " + myIDs[2]);
 
-        // Сформировать имя и путь к файлу снимка
+        // Сформировать имя и путь к файлу снимка world_xxx.xml
         // ....
 
         // Загрузить XML файл снимка, десериализовать его в Control и применить к объектам

@@ -24,11 +24,11 @@ public class MyButton : MonoBehaviour, IInteractive {
         {
             print("Меня нажали!!!!!!!!!!!!!!!!!!!");
         }
-        if (Input.GetButtonDown("LeftMenuButt"))
+        else if (Input.GetButtonUp("RightMenuButt"))
         {
             print("Меня нажали!!!!!!!!!!!!!!!!!!!");
         }
-        if (Input.GetKeyDown("f"))
+        else if (Input.GetKeyDown("f"))
         {
             myButtonState = "down";
             print("Меня нажали!!!!!!!!!!!!!!!!!!!");

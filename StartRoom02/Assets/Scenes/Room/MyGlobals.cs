@@ -9,9 +9,6 @@ public class MyGlobals : MonoBehaviour
     public string GlHeadset { get; }
     public Transform GlWhatToSeeTr { get; set; }
 
-    // Делегат - для формирования событий
-    public delegate void MyEvent(string NativePath, Transform mySenderTransf);
-
     // Объект для вывода текстовых сообщений в пространство
     UI_TextMessage ui_Message;
     
@@ -21,10 +18,6 @@ public class MyGlobals : MonoBehaviour
         // Объект для вывода текстовых сообщений в 3D пространство
         ui_Message = GameObject.Find("Message").GetComponent<UI_TextMessage>();
 
-
-
-        // Подпишемся на события
-        Sender.MyStateChanged += OnStateChanged;
     }
 
 
@@ -43,12 +36,4 @@ public class MyGlobals : MonoBehaviour
         ui_Message.MyFuncShowMessage(myMessage, 3.0f);
     }
 
-    
-
-    // Обработчик события OnStateChanged
-    public void OnStateChanged(string NativePath, Transform mySenderTransf)
-    {
-        print("Обработчик: OnStateChanged" + ", Полное имя объекта в иерархии сцены: " + NativePath + ", Публикатор: " + mySenderTransf);
-        print(mySenderTransf.position.ToString("F4"));
-    }
 }
