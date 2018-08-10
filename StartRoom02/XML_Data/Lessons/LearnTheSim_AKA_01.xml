@@ -18,6 +18,16 @@
         <instr>На правом контроллере нажмите большим пальцем кнопку "Меню".</instr>
         <light>Кнопка Меню на правом контроллере</light>
         <tosee>Правый контроллер</tosee>
+        <commands>
+          <object nativePath="room">
+            <active state="true/false" />
+            <parent par="Новый родитель" />
+            <pos x="-1.07" y="0.86" z="0" />
+            <rot x="0" y="0" z="0" />
+            <scale x="2" y="2" z="2" />
+            <state name="freeState" value="free" />
+          </object>
+        </commands>
         <towait sender="Правый контроллер, кнопка Меню" event="Нажатие кнопки">
           <plus>
             <message>Кнопка "Меню" нажата</message>
@@ -36,14 +46,51 @@
             <message>Нажмите кнопку "Меню".</message>
           </minus>
         </towait>
+        <towait sender="Левый контроллер, кнопка Меню" event="Нажатие кнопки">
+          <minus>
+            <light>Кнопка Меню на правом контроллере</light>
+            <message>Нажмите кнопку "Меню".</message>
+          </minus>
+        </towait>
       </action>
     </step>
     <step num="4" task="Кнопка Меню левого контроллера" />
+    <action num="1">
+      <instr>На левом контроллере нажмите большим пальцем кнопку "Меню".</instr>
+      <light>Кнопка Меню на левом контроллере</light>
+      <tosee>Левый контроллер</tosee>
+      <towait sender="Левый контроллер, кнопка Меню" event="Нажатие кнопки">
+        <plus>
+          <message>Кнопка "Меню" нажата</message>
+        </plus>
+        <minus>
+          <message>Нажмите кнопку "Меню".</message>
+        </minus>
+      </towait>
+    </action>
+    <action num="2">
+      <instr>Вы нажали кнопку "Меню". Чтобы продолжить нажмите кнопку "Меню" еще раз.</instr>
+      <tosee>Левый контроллер</tosee>
+      <towait sender="Левый контроллер, кнопка Меню" event="Нажатие кнопки">
+        <minus>
+          <light>Кнопка Меню на левом контроллере</light>
+          <message>Нажмите кнопку "Меню".</message>
+        </minus>
+      </towait>
+      <towait sender="Правый контроллер, кнопка Меню" event="Нажатие кнопки">
+        <minus>
+          <light>Кнопка Меню на левом контроллере</light>
+          <message>Нажмите кнопку "Меню".</message>
+        </minus>
+      </towait>
+    </action>
+    <!--
     <step num="5" task="Кнопка Триггер правого контроллера" />
     <step num="6" task="Кнопка Триггер левого контроллера" />
     <step num="7" task="Тачпад правого контроллера" />
     <step num="8" task="Тачпад левого контроллера" />
     <step num="9" task="Кнопка Грип правого контроллера" />
     <step num="10" task="Кнопка Грип левого контроллера" />
+    -->
   </part>
 </topic>
