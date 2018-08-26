@@ -96,7 +96,13 @@ public class Vec3
 [Serializable]
 public class State
 {
-    public State() { }
+    public State()
+    {
+        freeState = "";
+        openState = "";
+        downState = "";
+        param = -1.0f;
+    }
     public State(string fs, string os="", float  p=-1.0f)
     {
         freeState = fs;

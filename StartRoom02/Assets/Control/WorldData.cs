@@ -9,9 +9,6 @@ using UnityEngine;
 [XmlRoot("world")]
 public class WorldData
 {
-    [XmlAttribute("worldRoot")]
-    public string worldRoot;               // это имя объекта, в котором лежат все
-
     [XmlArray("controls"), XmlArrayItem("control")]
     public List<ControlData> controlsData = new List<ControlData>();
 

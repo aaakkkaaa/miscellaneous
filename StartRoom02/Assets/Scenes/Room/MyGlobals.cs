@@ -11,7 +11,15 @@ public class MyGlobals : MonoBehaviour
 
     // Объект для вывода текстовых сообщений в пространство
     UI_TextMessage ui_Message;
-    
+
+    // Для построения пути к файлам xml
+    public string myDataPath = "XML_Data";
+    // Имя подпапки для файлов описания world. Когда сделаем учеников, будем хранить в своей папке для каждого
+    public string myXWorldPath = "WorldShots";
+    // Имя подпапки для файлов уроков. Перенести в общеизвестное место и оформить, как паблик?
+    public string myXFilePath = "Lessons";
+
+
     // Use this for initialization
     void Start()
     {

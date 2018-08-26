@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MyButton : MonoBehaviour, IInteractive {
+public class MyButton : MonoBehaviour, IInteractive
+{
+    public string ButtonInputName;
 
     private Control _control;
 
-    private string myButtonState;
+    private string myButtonState = "up";
 
     private void Awake()
     {
@@ -20,24 +22,28 @@ public class MyButton : MonoBehaviour, IInteractive {
     void Update ()
     {
         // ПРОВЕРИТЬ! Пока используем стандартный input
-        if (Input.GetButtonDown("RightMenuButt"))
+        if (ButtonInputName != null && Input.GetButtonDown(ButtonInputName))
         {
-            print("Меня нажали!!!!!!!!!!!!!!!!!!! RightMenuButt");
+            myButtonState = "down";
+            print("Меня нажали!!!!!!!!!!!!!!!!!!! " + ButtonInputName );
+            _control.ChangeState();
         }
-        else if (Input.GetButtonUp("LeftMenuButt"))
+        else if (ButtonInputName != null && Input.GetButtonUp(ButtonInputName))
         {
-            print("Меня нажали!!!!!!!!!!!!!!!!!!! LeftMenuButt");
+            myButtonState = "up";
+            print("Меня отжали!!!!!!!!!!!!!!!!!!! " + ButtonInputName);
+            _control.ChangeState();
         }
         else if (Input.GetKeyDown("f"))
         {
             myButtonState = "down";
-            print("Меня нажали!!!!!!!!!!!!!!!!!!!");
+            print("Меня нажали!!!!!!!!!!!!!!!!!!! " + ButtonInputName);
             _control.ChangeState();
         }
         else if (Input.GetKeyUp("f"))
         {
             myButtonState = "up";
-            print("Меня отжали!!!!!!!!!!!!!!!!!!!");
+            print("Меня отжали!!!!!!!!!!!!!!!!!!! " + ButtonInputName);
             _control.ChangeState();
 
         }
@@ -61,8 +67,6 @@ public class MyButton : MonoBehaviour, IInteractive {
     public void setState(State s)
     {
         // привести положение и др. свойства в соответствие с переданным состоянием
-
-
 
     }
 

@@ -3,12 +3,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
 
 public class WorldController : MonoBehaviour
 {
-
-    // имя корневого объекта
-    private string _rootObjName = "room";
     // список всех контролов, создается рекурсивным обходом, используется при загрузке и сохранении
     private List<Control> _controls;
     // Словарь: <Путь_к_контролу_на_момент_старта, Control>
@@ -28,15 +26,18 @@ public class WorldController : MonoBehaviour
 
     private bool showGUI = false;       // показывать или скрывать интерфейс для сохранения/загрузки
 
-    /*
+
     void Awake()
     {
-        // Здесь room - родитель в котором должны быть все контролы
-        GameObject room = GameObject.Find(_rootObjName);
-        // строим список всех контролов, рекурсивно обходя начиная с room
+        // строим список всех контролов, рекурсивно обходим начиная со сцены
+        Scene myScene = SceneManager.GetActiveScene();
+        GameObject[] myRootObjects = myScene.GetRootGameObjects();
         _controls = new List<Control>();
-        CreateControlList(room.transform);
-        print("controls.Count " + _controls.Count);
+        for (int i=0; i<myRootObjects.Length; ++i)
+        {
+            CreateControlList(myRootObjects[i].transform);
+        }
+        print("WorldController.Awake -> controls.Count = " + _controls.Count);
 
         // строим словарь "путь по состоянию на момент запуска" -> Control 
         _sourceControls = new Dictionary<string, Control>();
@@ -48,7 +49,6 @@ public class WorldController : MonoBehaviour
             _sourceControls.Add(ctrl.NativePath, ctrl);
         }
     }
-    */
 
     private void Update()
     {
@@ -73,11 +73,12 @@ public class WorldController : MonoBehaviour
     }
 
     // загрузка xml описания мира, активизация всех контролов, расстановка их 
-    public void Load(string name)
+    public void Load(string fileName)
     {
         Control ctrl;
 
-        worldData = WorldData.Load(Path.Combine(Application.dataPath, name));
+        print("WorldController.Load " + fileName);
+        worldData = WorldData.Load(fileName);
 
         // активировать все объекты из словара _sourceControls
         foreach (Control c in _sourceControls.Values)
@@ -86,7 +87,7 @@ public class WorldController : MonoBehaviour
         }
 
         // разложить все Control по правильным местам в иерархии
-        int[] rang = new int[worldData.controlsData.Count]; // для хранения длинн пути
+        int[] rang = new int[worldData.controlsData.Count]; // массив для хранения длинн пути
         for (int i = 0; i < worldData.controlsData.Count; ++i)
         {
             rang[i] = worldData.controlsData[i].currentPath.Split( new Char[] { '/' }).Length;
@@ -112,6 +113,9 @@ public class WorldController : MonoBehaviour
                         if(curParent == null)
                         {
                             print("не нашли родителя для " + strWork + "  путь по которому искали: " + strParent);
+                        }
+                        else
+                        {
                             ctrl.gameObject.transform.parent = curParent.transform;
                         }
                     }
@@ -144,7 +148,6 @@ public class WorldController : MonoBehaviour
             ControlData cd = _controls[i].PrepareDataToSave();
             worldData.controlsData.Add(cd);
         }
-        worldData.worldRoot = _rootObjName;
 
         worldData.Save(Path.Combine(Application.dataPath, name));
     }
@@ -162,7 +165,6 @@ public class WorldController : MonoBehaviour
         }
         return p;
     }
-
 
     // для отладки - интерфейс для загрузки и сохранения в xml
     string _fileName;

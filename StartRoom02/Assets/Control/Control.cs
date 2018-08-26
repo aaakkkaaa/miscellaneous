@@ -61,6 +61,15 @@ public class Control : MonoBehaviour
         }
     }
 
+    public void SetState( State st)
+    {
+        // надо ли продублировать изменения в _controlData.state?
+        if (_inter != null)
+        {
+            _inter.setState(st);
+        }
+    }
+
     public virtual ControlData PrepareDataToSave()
     {
         if (_controlData == null)
@@ -124,6 +133,10 @@ public class Control : MonoBehaviour
     // возвращает значение конкретного состояния
     public string GetState(string property)
     {
+        if(_controlData.state == null)
+        {
+            return "";
+        }
         switch (property)       // если список будет увеличиваться, может сделать словарь?
         {
             case "freeState":
@@ -143,10 +156,46 @@ public class Control : MonoBehaviour
         return (value == GetState(property)); 
     }
 
+    // если в сценарии есть раздел <commands><object><state>.....
+    public void SetState(string property, string value)
+    {
+        if (_controlData.state == null)
+        {
+            _controlData.state = new State();
+        }
+        switch (property)       
+        {
+            case "freeState":
+                    _controlData.state.freeState = value;
+                     break;
+            case "openState":
+                     _controlData.state.openState = value;
+                     break;
+            case "downState":
+                     _controlData.state.downState = value;
+                     break;
+        }
+        SetState(_controlData.state);       // там передаем state в _inter
+    }
+    public void SetState(string property, float value)
+    {
+        if (_controlData.state == null)
+        {
+            _controlData.state = new State();
+        }
+        switch (property)       
+        {
+            case "param":
+                _controlData.state.param = value;
+                break;
+        }
+        SetState(_controlData.state);       // там передаем state в _inter
+    }
 
     // По переданному NativePath проверяем, является ли он родителем данного объекта?
     public bool CheckParent( string anyPath )
     {
+        // TODO: возможно, надо искать объект не в словаре, так как он не обязательно контрол?
         Control candidat = _worldController.SourceControls[anyPath];
         return (transform.parent.gameObject == candidat.gameObject);
     }

@@ -4,8 +4,10 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using System;
+using System.Globalization;
 using UnityEngine;
-
+using BooleanLogicParser;
 
 public class ScrHerder : MonoBehaviour
 {
@@ -42,16 +44,20 @@ public class ScrHerder : MonoBehaviour
     //================= Для работы с XML ================
 
     // Имя папки для файлов данных проекта. Перенести в общеизвестное место и оформить, как паблик?
-    [SerializeField]
-    string myDataPath = "XML_Data";
+    // Ф: Перенес в MyGlobals
 
-    // Имя подпапки для файлов уроков. Перенести в общеизвестное место и оформить, как паблик?
-    [SerializeField]
-    string myXFilePath = "Lessons";
-
+/*
     // Имя файла XML
     [SerializeField]
     string myXFileName = "LearnTheSim_AKA.xml";
+*/
+
+    // Связь пункта меню и имени файла
+    Dictionary<string, string> xmlFiles = new Dictionary<string, string>
+    {
+        ["10"] = "10_LearnTheSim.xml",
+        ["20"] = "20_Progress.xml"
+    };
 
     // Полный путь к файлу XML
     string myXFilePathName;
@@ -87,13 +93,8 @@ public class ScrHerder : MonoBehaviour
 
         //===============================================
 
-
         // Общие параметры и методы
         myGlobals = GameObject.Find("Boss").GetComponent<MyGlobals>();
-
-        // Полный путь к файлу XML
-        myXFilePathName = Path.Combine(Directory.GetCurrentDirectory(), myDataPath, myXFilePath, myXFileName);
-
         // Источник информации об объектах и т.д.
         _worldController = GetComponent<WorldController>();
         // Подписка на события из Control
@@ -118,13 +119,13 @@ public class ScrHerder : MonoBehaviour
                 myGlobals.GlShowMessage("Ошибка загрузки учебной темы"); // Заменить на вывод в экранный UI
             }
         }
-
+        
         // Встать на определенный шаг
-        else if (Input.GetKeyDown("s"))
+        else if (Input.GetKeyDown("g"))
         {
             MyGoToStep("10.10.10"); // тема.раздел.шаг
         }
-
+        
         // Включить инструкцию
         else if (Input.GetKeyDown("i"))
         {
@@ -165,7 +166,7 @@ public class ScrHerder : MonoBehaviour
         // Проверка Препарсера
         else if (Input.GetKeyDown("3"))
         {
-            MyPreParser("[ViveControllerLeft/ButtonGrip.downState=down] or [ViveControllerRight/ButtonGrip.downState=down]");
+            MyPreParser("![ViveControllerLeft/ButtonGrip.downState=down] or [ViveControllerRight/ButtonGrip.downState=down]");
         }
 
 
@@ -173,13 +174,31 @@ public class ScrHerder : MonoBehaviour
 
     // ==========================================================================================================
 
-    // Загрузить XML документ
+    // Загрузить XML документ по строке вида 10.10.10 и запустить сценарий
+    public void Load( string curStep )
+    {
+        string[] stepParts = curStep.Split('.');
+        string fileName = xmlFiles[ stepParts[0] ];
+        // Полный путь к файлу XML
+        myXFilePathName = Path.Combine(Directory.GetCurrentDirectory(), myGlobals.myDataPath, myGlobals.myXFilePath, fileName);
+
+        myXdocLesson = MyLoadXML(myXFilePathName);
+        if (myXdocLesson == null)
+        {
+            myGlobals.GlShowMessage("Ошибка загрузки учебной темы"); // Заменить на вывод в экранный UI
+        }
+        else
+        {
+            MyGoToStep(curStep);
+        }
+    }
+
     XDocument MyLoadXML(string myFile)
     {
         try
         {
             XDocument myXDoc = XDocument.Load(myFile);
-            print("XML Document загружен");
+            print("XML Document загружен " + myFile);
             // Пропишем название темы, раздела и число шагов в панели инструкции
             myInstrUI.MyTopicText(myXDoc.Root.Attribute("name").Value);
             return myXDoc;
@@ -194,7 +213,7 @@ public class ScrHerder : MonoBehaviour
     // ==========================================================================================================
 
     // Установить урок (тему) на указанный шаг
-    void MyGoToStep(string myStepID)
+    public void MyGoToStep(string myStepID)
     {
         foreach (XElement myEl in myXdocLesson.Root.Elements("part"))
         {
@@ -204,14 +223,7 @@ public class ScrHerder : MonoBehaviour
         string[] myIDs = myStepID.Split(new char[] { '.' });
         print("myStep = " + myIDs[0] + " " + myIDs[1] + " " + myIDs[2]);
 
-        // Сформировать имя и путь к файлу снимка world_xxx.xml
-        // ....
-
-        // Загрузить XML файл снимка, десериализовать его в Control и применить к объектам
-        // ....
-
-        // Найти в XML документе нужный шаг
-
+        // Найти в XML документе нужный шаг:
         // Сначала найдем раздел (по атрибуту "num")
         IEnumerable<XElement> myParts = from myEl in myXdocLesson.Root.Elements("part") where (string)myEl.Attribute("num") == myIDs[1] select myEl;
         myPart = myParts.First(); // берем только первый (он же должен быть единственный)
@@ -237,12 +249,14 @@ public class ScrHerder : MonoBehaviour
 
 
         // Возьмем первый action шага
+
+        // Возможно нажо получить все <action> в виде массива? Чтобы было проше переходить к следующему
         myAct = myStep.Element("action");
+
         print("myAct = " + myAct);
 
         // Начнем реализацию action
         MyActionPrepare(myAct);
-
     }
 
 
@@ -252,10 +266,10 @@ public class ScrHerder : MonoBehaviour
     void MyActionPrepare(XElement myAct)
     {
         // Выполнить команды для стандартных объектов
-        MyStdCommands(myAct);
+        MyStdCommands(myAct);           // <action>
 
         // Выполнить команды для произвольных объектов
-        myCustomCommands(myAct);
+        myCustomCommands(myAct);        // <action>
 
         // Сформировать условия + и условия -
         //...
@@ -278,8 +292,10 @@ public class ScrHerder : MonoBehaviour
     }
 
     // Выполнить команды для стандартных объектов
+    // myEl это блок <action>....</action> или <wait>...</wait> или <plus>...</plus> или <minus>...</minus>
     void MyStdCommands(XElement myEl)
     {
+        print("MyStdCommands " + myEl);
         // Интструкция. Подготовить и включить.
         IEnumerable<XElement> myInstrPages = myEl.Elements("instr"); // все элементы <instr> в данном узле
         int myPagesCount = myInstrPages.Count(); // сколько в инструкции страниц
@@ -331,33 +347,35 @@ public class ScrHerder : MonoBehaviour
 
     }
 
-    // Выполнить команды для произвольных объектов
+    // Выполнить команды для произвольных объектов  
+    // myEl это блок <action>....</action> или <wait>...</wait> или <plus>...</plus> или <minus>...</minus>
     void myCustomCommands(XElement myEl)
     {
         // Обрабатывем элемент commands в данном узле
-        XElement myCommands = myEl.Element("commands");
+        XElement myCommands = myEl.Element("commands");     //<commands>
         // Все элементы object в данном узле - это и есть команды
-        IEnumerable<XElement> myObjects = myCommands.Elements("object");
+        IEnumerable <XElement> myObjects = myCommands.Elements("object");
         // Делаем, если команды есть
         if (myObjects.Count() > 0)
         {
             foreach (XElement el in myObjects)
             {
                 print("el = " + el);
-                // Объект
-                Transform myObjTr = GameObject.Find(el.Attribute("nativePath").Value).transform; // ВРЕМЕННО! Заменить на обращение к World
+                // Объект <object>
+                //Transform myObjTr = GameObject.Find(el.Attribute("nativePath").Value).transform; // ВРЕМЕННО! Заменить на обращение к WorldController
+                Transform myObjTr = _worldController.SourceControls[el.Attribute("nativePath").Value].transform;
 
                 // Состояние активности
                 XElement myActive = el.Element("active");
                 if(myActive != null)
                 {
                     string myActiveState = myActive.Attribute("state").Value;
-                    bool myState;
-                    if (bool.TryParse(myActiveState, out myState))
+                    bool myIsActive;
+                    if (bool.TryParse(myActiveState, out myIsActive))
                     {
-                        myObjTr.gameObject.SetActive(myState);
+                        myObjTr.gameObject.SetActive(myIsActive);
                     }
-                    print("myActiveState = " + myActiveState + " myState = " + myState);
+                    print("myActiveState = " + myActiveState + " myState = " + myIsActive);
                 }
 
                 // Новый родитель
@@ -368,7 +386,9 @@ public class ScrHerder : MonoBehaviour
                     if (myParentAttr != null)
                     {
                         string myParentPath = myParentAttr.Value;
-                        Transform myParTr = GameObject.Find(myParentPath).transform; // ВРЕМЕННО! Заменить на обращение к World
+                        Transform myParTr = GameObject.Find(myParentPath).transform; // НЕ ВРЕМЕННО! Так и надо
+                        print("myParentPath = " + myParentPath);
+
                         myObjTr.parent = myParTr;
                     }
                     else
@@ -380,11 +400,69 @@ public class ScrHerder : MonoBehaviour
                 {
                     print("myParentNode == null");
                 }
+
+                // позиция, углы, масштаб
+                CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                ci.NumberFormat.CurrencyDecimalSeparator = ".";
+                float myX, myY, myZ;
+                XElement myPos = el.Element("pos");
+                if (myPos != null)
+                {
+                    myX = Single.Parse(myPos.Attribute("x").Value, NumberStyles.Any, ci);
+                    myY = Single.Parse(myPos.Attribute("y").Value, NumberStyles.Any, ci);
+                    myZ = Single.Parse(myPos.Attribute("z").Value, NumberStyles.Any, ci);
+                    //float.TryParse(myPos.Attribute("x").Value, out myX );
+                    //myX = Convert.ToSingle( myPos.Attribute("x").Value );
+                    myObjTr.localPosition = new Vector3(myX, myY, myZ);
+                    print("myObjTr.localPosition = " + myObjTr.localPosition);
+                }
+                XElement myRot = el.Element("rot");
+                if (myRot != null)
+                {
+                    myX = Single.Parse(myRot.Attribute("x").Value, NumberStyles.Any, ci);
+                    myY = Single.Parse(myRot.Attribute("y").Value, NumberStyles.Any, ci);
+                    myZ = Single.Parse(myRot.Attribute("z").Value, NumberStyles.Any, ci);
+                    myObjTr.localEulerAngles = new Vector3(myX, myY, myZ);
+                }
+                XElement myScale = el.Element("scale");
+                if (myScale != null)
+                {
+                    myX = Single.Parse(myScale.Attribute("x").Value, NumberStyles.Any, ci);
+                    myY = Single.Parse(myScale.Attribute("y").Value, NumberStyles.Any, ci);
+                    myZ = Single.Parse(myScale.Attribute("z").Value, NumberStyles.Any, ci);
+                    myObjTr.localScale = new Vector3(myX, myY, myZ);
+                }
+
+                // состояния freeState, openState, downState
+                XElement myState = el.Element("state");
+                if(myState != null)
+                {
+                    Control control = myObjTr.gameObject.GetComponent<Control>();
+                    XAttribute myFreeState = myState.Attribute("freeState");
+                    if (myFreeState != null)
+                    {
+                        control.SetState("freeState", myFreeState.Value);
+                    }
+                    XAttribute myOpenState = myState.Attribute("openState");
+                    if (myOpenState != null)
+                    {
+                        control.SetState("openState", myOpenState.Value);
+                    }
+                    XAttribute myDownState = myState.Attribute("downState");
+                    if (myDownState != null)
+                    {
+                        control.SetState("downState", myDownState.Value);
+                    }
+                    XAttribute myParam = myState.Attribute("param");
+                    if (myParam != null)
+                    {
+                        string strParam = myParam.Value;
+                        float param = Single.Parse(myParam.Value, NumberStyles.Any, ci);
+                        control.SetState("param",  param);
+                    }
+                }
             }
         }
-
-
-
     }
 
     // Таймер ожидания действий курсанта
@@ -403,25 +481,78 @@ public class ScrHerder : MonoBehaviour
     void MyControlEvent(string NativePath, Transform mySenderTransf)
     {
         print("Обработчик: OnStateChanged" + ", Полное имя объекта в иерархии сцены: " + NativePath + ", Публикатор: " + mySenderTransf);
-        print(mySenderTransf.position.ToString("F4"));
+        //print(mySenderTransf.position.ToString("F4"));
 
-        // Примеры вызовов, которые будут использоваться в процессе анализа предикторов
-        // Как получить значение предиктора вида [room/box.openState=open]
-        // Расчленяем на строки и загоняем их в переменные:
-        // string myPath (сюда пойдет "room/box")
-        // string propName (сюда пойдет "openState")
-        // string propValue (сюда пойдет "open")
-        // получить Control:
-        // Control ctrl = _worldController.SourceControls[myPath];
-        // Потом у контрола вызвать функцию:
-        // bool result = ctrl.GetState(propName, propValue);
+        IEnumerable<XElement> allPluses = myAct.Elements("plus");
+        // проверяю условие <plus> для каждого (узлов <plus> может быть несколько)
+        // пример узла <plus condition="[ViveControllerRight/ButtonMenu.downState=down]">
+        bool isPlus = false;
+        foreach (XElement pl in allPluses)
+        {
+            string condish = pl.Attribute("condition").Value;
+            string expression = MyPreParser(condish);
+            print("plus expression = " + expression);
+            bool result = ParseSingleToken(expression);
+            if(result)
+            {
+                isPlus = true;
+                print("Условие выполнено, будет переход к следующему шагу");
+                MyStdCommands(pl);
+                MyActionEnd();
 
-        // Если нужно проверять вхождение одного объекта имеющего компонент Control в другой, имеющий компонент Control
-        // Оба контролы, так как в предикторах используются NativePath
-        // [room/box.parent=room/bigbox1]
-        // Control ctrl = _worldController.SourceControls["room/box"];
-        // bool result = ctrl.CheckParent( "room/bigbox1" )
+                // <next act="0"/> номер следующего action, если 0 - то выход на конец шага 
+                XElement myNext = pl.Element("next");
+                if (myNext != null)
+                {
+                    string actNum = myNext.Attribute("act").Value;
+                    if(actNum != "0")
+                    {
+                        IEnumerable<XElement> myActs = from myEl in myStep.Elements("action") where (string)myEl.Attribute("num") == actNum select myEl;
+                        myAct = myActs.First();
+                        MyActionPrepare(myAct);
+                        return;
+                    }
+                    else
+                    {
+                        //TODO:  переход к началу следующего шага
+                    }
+                }
+                else
+                {
+                    IEnumerable<XElement> myNextActs = myAct.ElementsAfterSelf("action");
+                    // TODO: если последний action в шаге, а может и последний step 
 
+                }
+                
+
+                return;     // на всякий случай
+            }
+        }
+        // Если никакой из плюсов не выполнился, то же самое делаю с минусами
+        if (!isPlus)
+        {
+            IEnumerable<XElement> allMinuses = myAct.Elements("minus");
+            foreach (XElement min in allMinuses)
+            {
+                string condish = min.Attribute("condition").Value;
+                string expression = MyPreParser(condish);
+                print("minus expression = " + expression);
+                bool result = ParseSingleToken(expression);
+                if (result)
+                {
+                    MyStdCommands(min);
+                    // TODO: надо ли проверять остальные условия minus или сразу return?
+                }
+            }
+        }
+
+    }
+
+    private bool ParseSingleToken(string expression)
+    {
+        var tokens = new Tokenizer(expression).Tokenize();
+        var parser = new Parser(tokens);
+        return parser.Parse();
     }
 
     // Предварительная подготовка логического условия
@@ -487,35 +618,48 @@ public class ScrHerder : MonoBehaviour
         StringBuilder myCond = new StringBuilder();
 
 
-        // Обработаем каждый предикат
+  // Обработаем каждый предикат
         for(int i=0; i < myPredicates.Count; i++)
         {
+            print(myPredicates[i]);
             string[] mySubStr = myPredicates[i].PrString.Split(new char[] { '.', '=' });
             string myPath = mySubStr[0];
             string propName = mySubStr[1];
             string propValue = mySubStr[2];
 
             // Получить Control:
-            //Control ctrl = _worldController.SourceControls[myPath];
+            print("myPath = " + myPath);
+            Control ctrl = _worldController.SourceControls[myPath];
+            bool result;
             // Получить логическое значение предиката
-            //bool result = ctrl.GetState(propName, propValue);
+            if ( ctrl != null)
+            {
+                result = ctrl.GetState(propName, propValue);
+            }
+            else
+            {
+                print("MyPreParser: Не удается получить Control по пути: " + myPath);
+                result = false;
+            }
 
-            bool result = true;
-
-            // Заменить в строке условий [...] на его логическое значение
+            // Собрать строку, заменяя в ней условия [...] на их логические значения
+            if (i == 0) // могут быть символы до первой открывающейся скобки
+            {
+                myCond.Append(myCondition.Substring(0, myPredicates[i].OpenBr));
+            }
             myCond.Append(result);
-            if(i < myPredicates.Count - 1)
+            if(i < myPredicates.Count - 1) // это еще не последний предикат
             {
                 myCond.Append(myCondition.Substring(myPredicates[i].CloseBr+1, myPredicates[i+1].OpenBr - myPredicates[i].CloseBr - 1));
             }
-            print("myCond = " + myCond);
+            else // а вот это уже последний
+            {
+                myCond.Append(myCondition.Substring(myPredicates[i].CloseBr + 1, myCondition.Length - myPredicates[i].CloseBr - 1));
+            }
         }
-
+        print( "MyPreParser return  " + myCond.ToString() );
         return myCond.ToString();
     }
-
-
-
 
 
     // ==========================================================================================================
@@ -538,10 +682,13 @@ public class ScrHerder : MonoBehaviour
         StopCoroutine(myTimer);
 
         //Выключить подсветку
-        //...
+        myLightBallTr.gameObject.SetActive(false);
 
         //Выключить "куда смотреть"
         //...
 
+        // на всякий случай, может это не нужно
+        myInstrUI.Hide();
+        mySummaryUI.Hide();
     }
 }
