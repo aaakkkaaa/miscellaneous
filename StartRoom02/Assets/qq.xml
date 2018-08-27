@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<world xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <controls>
+    <control nativePath="ViveControllerLeft" currentPath="ViveControllerLeft" active="true">
+      <pos x="-0.24" y="1" z="-0.74" />
+      <rot x="-0" y="0" z="330.43" />
+    </control>
+    <control nativePath="ViveControllerLeft/ButtonMenu" currentPath="ViveControllerLeft/ButtonMenu" active="true">
+      <pos x="0" y="0.00631999644" z="-0.01978" />
+      <rot x="-0" y="0" z="0" />
+      <state freeState="" openState="" downState="up" param="-1" />
+    </control>
+    <control nativePath="ViveControllerRight" currentPath="Room/ViveControllerRight" active="true">
+      <pos x="0.296" y="1.5" z="-0.74" />
+      <rot x="-0" y="0" z="50.0000038" />
+      <scale x="2" y="2" z="2" />
+    </control>
+    <control nativePath="ViveControllerRight/ButtonMenu" currentPath="Room/ViveControllerRight/ButtonMenu" active="true">
+      <pos x="0" y="0.00631999644" z="-0.01978" />
+      <rot x="-0" y="0" z="0" />
+      <state freeState="" openState="" downState="up" param="-1" />
+    </control>
+  </controls>
+</world>
