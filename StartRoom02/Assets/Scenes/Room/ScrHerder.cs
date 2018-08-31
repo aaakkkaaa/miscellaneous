@@ -541,7 +541,6 @@ public class ScrHerder : MonoBehaviour
                 if (result)
                 {
                     MyStdCommands(min);
-                    break; // Достаточно первого обработанного "минуса"
                     // TODO: надо ли проверять остальные условия minus или сразу return?
                 }
             }

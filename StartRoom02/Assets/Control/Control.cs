@@ -153,6 +153,11 @@ public class Control : MonoBehaviour
     // возвращает значение конкретного состояния
     public bool GetState(string property, string value)
     {
+        // TODO: возможна ситуация, когда property это parent, тогда value это NativePath, это проверять CheckParent
+        if(property == "parent")
+        {
+            return CheckParent(value);
+        }
         return (value == GetState(property)); 
     }
 
