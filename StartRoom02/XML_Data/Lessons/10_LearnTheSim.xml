@@ -2,7 +2,7 @@
 <topic num="10" name="Освоение тренажера">
   <part num="10" name="Контроллеры">
 
-    <step num="10" task="Кнопка Меню правого контроллера">
+    <step num="10" name="Кнопка Меню правого контроллера">
       <action num="1">
         <instr>На правом контроллере нажмите большим пальцем кнопку "Меню".</instr>
         <light>ViveControllerRight/ButtonMenu</light>
@@ -58,7 +58,7 @@
       </action>
     </step>
     
-    <step num="20" task="Кнопка Меню левого контроллера">
+    <step num="20" name="Кнопка Меню левого контроллера">
       <action num="1">
         <instr>На левом контроллере нажмите большим пальцем кнопку "Меню".</instr>
         <light>ViveControllerLeft/ButtonMenu</light>

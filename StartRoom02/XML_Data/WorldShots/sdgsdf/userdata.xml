@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Person xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <AccountName>sdgsdf</AccountName>
+  <Surname>gsdg</Surname>
+  <Name>sdfgsdg</Name>
+  <Patronymic>dsfgsdf</Patronymic>
+</Person>

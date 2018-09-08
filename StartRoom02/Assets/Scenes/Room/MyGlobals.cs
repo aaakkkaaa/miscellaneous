@@ -9,6 +9,12 @@ public class MyGlobals : MonoBehaviour
     public string GlHeadset { get; }
     public Transform GlWhatToSeeTr { get; set; }
 
+    // Настройки
+    public bool isTips = true;
+    public bool isInstruc = true;
+    public float sndVolume = 1.0f;      // TODO: уточнить от 0..1 или 0..100?
+    public bool isJoystick = true;
+
     // Объект для вывода текстовых сообщений в пространство
     UI_TextMessage ui_Message;
 

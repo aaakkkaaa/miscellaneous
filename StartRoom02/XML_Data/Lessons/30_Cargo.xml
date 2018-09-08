@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic num="30" name="Грузовой отсек ТГК Прогресс">
+  <part num="10" name="Вид снаружи">
+    <step num="10" name="ТГК Прогресс, вид снаружи">
+      <action num="1">
+        <instr>Транспортно-грузовой корабль "Прогресс"</instr>
+        <message>Транспортно-грузовой корабль "Прогресс"</message>
+        <commands>
+          <object nativePath="ISS/Progress">
+            <active state="true"/>
+            <parent par="Room"/>
+            <pos x="0.296" y="1.5" z="-0.74"/>
+            <rot x="0" y="0" z="50"/>
+            <scale x="1" y="1" z="1"/>
+            <state param="10" openState="close" freeState="free"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="2">
+        <instr>Снимаем экранно-вакуумную теплоизоляцию</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Skin">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="3">
+        <instr>Убираем солнечные панели</instr>
+        <commands>
+          <object nativePath="ISS/Progress/External/Solar Panels">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="4">
+        <instr>Убираем агрегатный отсек</instr>
+        <commands>
+          <object nativePath="ISS/Progress/External/Aggregate compartment">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="5">
+        <instr>Убираем приборный отсек</instr>
+        <commands>
+          <object nativePath="ISS/Progress/External/Device compartment">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="6">
+        <instr>Убираем агрегатный отсек</instr>
+        <commands>
+          <object nativePath="ISS/Progress/External/Aggregate compartment">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="7">
+        <instr>Убираем переходный отсек</instr>
+        <commands>
+          <object nativePath="ISS/Progress/External/Transition Compartment">
+            <active state="true"/>
+          </object>
+          <object nativePath="ISS/Progress/Transition Compartment_2">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="8">
+        <instr>Убираем отсек компонентов дозаправки</instr>
+        <commands>
+          <object nativePath="ISS/Progress/External/Compartment of refueling components">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="9">
+        <instr>Убираем наружную оболочку</instr>
+        <commands>
+          <object nativePath="ISS/Progress/External/Cargo compartment2Sides">
+            <active state="true"/>
+          </object>
+          <object nativePath="ISS/Progress/Inside/Sheathing2Sides">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+    </step>
+    <step num="20" name="Грузовой отсек">
+      <action num="1">
+        <instr>Разбандажируем груз</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside/Fastening _Tapes">
+            <active state="true"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="2">
+        <instr>Уберем груз c 4-го уровня</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside/Cargo">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="3">
+        <instr>Откроем контейнер III-4</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="4">
+        <instr>Освободим его от креплений</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="5">
+        <instr>Демонтируем его целиком</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="6">
+        <instr>Уберем остальные контейнеры уровня III</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="7">
+        <instr>Уберем контейнеры уровня II. Сначала один.</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="8">
+        <instr>Потом остальные.</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="9">
+        <instr>И, наконец, уберем контейнеры уровня I</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+    </step>
+    <resume>В этом разделе были показан грузовой отсек ТГК типа "Прогресс" вид снаружи и вид в разрезе с рабором по уровням</resume>
+  </part>
+  <part num="20" name="Вид изнутри">
+    <step num="10" name="Укладка с инструментом для РПР ТГК">
+      <action num="1">
+        <instr>Переместимся внутрь переходной камеры служебного модуля "Звезда"</instr>
+        <commands>
+          <object nativePath="Tools_Samples/ToolBag">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="2">
+        <instr>Откроем люк с закрепленным на нем стыковочным агрегатом</instr>
+        <commands>
+          <object nativePath="Tools_Samples/SocketWrench">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="3">
+        <instr>Разбандажируем груз</instr>
+        <commands>
+          <object nativePath="StrapKnifeToolBag">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="4">
+        <instr>Уберем груз c 4-го уровня</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Scissors">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="5">
+        <instr>Откроем контейнер III-4</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Gray_Ribbon">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="5">
+        <instr>Освободим его от креплений</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Gray_Ribbon">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="5">
+        <instr>Демонтируем его целиком</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Gray_Ribbon">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="5">
+        <instr>Уберем остальные контейнеры уровня III</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Gray_Ribbon">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="5">
+        <instr>Уберем контейнеры уровня II. Сначала один.</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Gray_Ribbon">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="8">
+        <instr>Потом остальные.</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="9">
+        <instr>И, наконец, уберем контейнеры уровня I</instr>
+        <commands>
+          <object nativePath="ISS/Progress/Inside">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+    </step>
+    <resume>В этом разделе были показан грузовой отсек ТГК типа "Прогресс" вид изнутри с рабором по уровням</resume>
+  </part>
+</topic>

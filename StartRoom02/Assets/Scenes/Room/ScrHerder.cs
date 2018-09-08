@@ -109,7 +109,7 @@ public class ScrHerder : MonoBehaviour
     {
 
         // Отладка. Вызовы методов по разным клавишам
-
+        /*
         // Загрузить документ XML с уроком
         if (Input.GetKeyDown("l"))
         {
@@ -168,7 +168,7 @@ public class ScrHerder : MonoBehaviour
         {
             MyPreParser("![ViveControllerLeft/ButtonGrip.downState=down] or [ViveControllerRight/ButtonGrip.downState=down]");
         }
-
+        */
 
     }
 
@@ -177,6 +177,7 @@ public class ScrHerder : MonoBehaviour
     // Загрузить XML документ по строке вида 10.10.10 и запустить сценарий
     public void Load( string curStep )
     {
+        print("ScrHerder.Load " + curStep);
         string[] stepParts = curStep.Split('.');
         string fileName = xmlFiles[ stepParts[0] ];
         // Полный путь к файлу XML
@@ -541,7 +542,8 @@ public class ScrHerder : MonoBehaviour
                 if (result)
                 {
                     MyStdCommands(min);
-                    // TODO: надо ли проверять остальные условия minus или сразу return?
+                    break;
+                    // Достаточно первого обработанного  минуса
                 }
             }
         }

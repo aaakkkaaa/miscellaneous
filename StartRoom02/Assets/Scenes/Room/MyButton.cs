@@ -34,6 +34,7 @@ public class MyButton : MonoBehaviour, IInteractive
             print("Меня отжали!!!!!!!!!!!!!!!!!!! " + ButtonInputName);
             _control.ChangeState();
         }
+        /*
         else if (Input.GetKeyDown("f"))
         {
             myButtonState = "down";
@@ -47,6 +48,7 @@ public class MyButton : MonoBehaviour, IInteractive
             _control.ChangeState();
 
         }
+        */
     }
 
     // ************* Реализация функций интерфейса IInteractive ************************

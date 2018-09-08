@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topic num="20" name="Демонстрация моделей">
+  <part num="10" name="Грузы">
+    <step num="10" name="Мешки для контейнеров.">
+      <action num="1">
+        <instr>Мешок для грузов №1, закрытый</instr>
+        <message>Мешок для грузов №1, закрытый</message>
+        <commands>
+          <object nativePath="Cargo_Samples/CargoBags">
+            <active state="true"/>
+            <parent par="Room"/>
+            <pos x="0.296" y="1.5" z="-0.74"/>
+            <rot x="0" y="0" z="50"/>
+            <scale x="1" y="1" z="1"/>
+            <state param="10" openState="close" freeState="free"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="2">
+        <instr>Мешок для грузов №2, закрытый</instr>
+        <commands>
+          <object nativePath="Cargo_Samples/CargoBags.004">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="3">
+        <instr>Мешок для грузов №3, закрытый</instr>
+        <commands>
+          <object nativePath="Cargo_Samples/CargoBags.005">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="4">
+        <instr>Мешок для грузов №4, открытый</instr>
+        <commands>
+          <object nativePath="Cargo_Samples/CargoBags.004">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+    </step>
+    <step num="20" name="Мешки для мусора">
+      <action num="1">
+        <instr>Мешок для мусора №1, закрытый</instr>
+        <commands>
+          <object nativePath="Cargo_Samples/CargoBags.002">
+            <active state="true"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="2">
+        <instr>Мешок для мусора №2, закрытый</instr>
+        <commands>
+          <object nativePath="Cargo_Samples/CargoBags.003">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="3">
+        <instr>Мешок для мусора №3, открытый</instr>
+        <commands>
+          <object nativePath="Cargo_Samples/CargoBags.001">
+            <active state="true"/>
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+    </step>
+    <step num="30" name="Контейнер с рационами питания (КРП), 3 вида">
+      <action num="1">
+        <instr>Контейнер с рационами питания (КРП), 3 вида</instr>
+        <commands>
+          <object nativePath="Cargo_Samples/Cargo_FoodContainer">
+            <scale x="1" y="1" z="1"/>
+          </object>
+          <object nativePath="Cargo_Samples/Cargo_FoodContainer2">
+            <scale x="1" y="1" z="1"/>
+          </object>
+          <object nativePath="Cargo_Samples/Cargo_FoodContainer3">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+    </step>
+    <resume>В этом разделе были показаны модели грузов</resume>
+  </part>
+  <part num="20" name="Инструменты">
+    <step num="10" name="Укладка с инструментом для РПР ТГК">
+      <action num="1">
+        <instr>Укладка с инструментом для РПР ТГК</instr>
+        <commands>
+          <object nativePath="Tools_Samples/ToolBag">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="2">
+        <instr>Спец. ключ для болтов</instr>
+        <commands>
+          <object nativePath="Tools_Samples/SocketWrench">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="3">
+        <instr>Нож-стропорез</instr>
+        <commands>
+          <object nativePath="StrapKnifeToolBag">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="4">
+        <instr>Ножницы</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Scissors">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="5">
+        <instr>Липкая лента серая</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Gray_Ribbon">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+    </step>
+    <step num="20" name="Другие инструменты">
+      <action num="1">
+        <instr>Считыватель штрих-кодов и RFD меток</instr>
+        <commands>
+          <object nativePath="Tools_Samples/RFD_Reader">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="2">
+        <instr>Приложение к бортовой инструкции РПР ТГК</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Pad1">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+      <action num="3">
+        <instr>Карандаш</instr>
+        <commands>
+          <object nativePath="Tools_Samples/Pencil">
+            <scale x="1" y="1" z="1"/>
+          </object>
+        </commands>
+        <wait time="0"/>
+      </action>
+    </step>
+    <resume>В этом разделе были показаны модели инструментов для РПР</resume>
+  </part>
+</topic>
